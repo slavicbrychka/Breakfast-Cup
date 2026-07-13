@@ -18,7 +18,7 @@ export default async function LeaderboardPage() {
     .maybeSingle();
 
   if (!season) {
-    return <p className="text-neutral-600">No season is active yet.</p>;
+    return <p className="text-neutral-600 dark:text-neutral-400">No season is active yet.</p>;
   }
 
   const [{ data: teams }, { data: scores }] = await Promise.all([
@@ -39,21 +39,21 @@ export default async function LeaderboardPage() {
     <div className="flex flex-col gap-6">
       <div>
         <h1 className="mb-1 text-2xl font-bold">Tournament Leaderboard</h1>
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
           {season.year} — blue tees, 2-player scramble best ball, {TOURNAMENT_ROUNDS} rounds / 54 holes.
         </p>
       </div>
 
       {!teams || teams.length === 0 ? (
-        <p className="text-neutral-600">Teams haven&apos;t been generated yet.</p>
+        <p className="text-neutral-600 dark:text-neutral-400">Teams haven&apos;t been generated yet.</p>
       ) : (
-        <div className="rounded-lg border border-neutral-200 bg-white p-4">
+        <div className="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
           <LeaderboardTable seasonId={season.id} teams={teams} initialScores={scores ?? []} />
         </div>
       )}
 
       {myTeam && (
-        <div className="rounded-lg border border-neutral-200 bg-white p-4">
+        <div className="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
           <h2 className="mb-3 font-semibold">Enter your team&apos;s scores</h2>
           <div className="flex flex-wrap gap-4">
             {Array.from({ length: TOURNAMENT_ROUNDS }, (_, i) => i + 1).map((roundNumber) => {
@@ -71,7 +71,7 @@ export default async function LeaderboardPage() {
                       min={1}
                       defaultValue={existing?.strokes ?? ""}
                       placeholder="strokes"
-                      className="w-24 rounded-md border border-neutral-300 px-2 py-1.5"
+                      className="w-24 rounded-md border border-neutral-300 px-2 py-1.5 dark:border-neutral-700 dark:bg-neutral-900"
                     />
                     <button type="submit" className="rounded-md bg-green-700 px-3 py-1.5 text-white hover:bg-green-800">
                       Save

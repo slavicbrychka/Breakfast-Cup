@@ -51,7 +51,7 @@ export default function LeaderboardTable({
     <div>
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-neutral-200 text-left text-neutral-500">
+          <tr className="border-b border-neutral-200 text-left text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
             <th className="py-1.5 pr-2">Team</th>
             {Array.from({ length: TOURNAMENT_ROUNDS }, (_, i) => (
               <th key={i} className="py-1.5 pr-2">
@@ -63,11 +63,11 @@ export default function LeaderboardTable({
         </thead>
         <tbody>
           {rows.map((row, i) => (
-            <tr key={row.team.id} className={`border-b border-neutral-100 ${i === 0 ? "font-semibold" : ""}`}>
+            <tr key={row.team.id} className={`border-b border-neutral-100 dark:border-neutral-800 ${i === 0 ? "font-semibold" : ""}`}>
               <td className="py-1.5 pr-2">
                 {row.team.player_1?.name ?? "?"} &amp; {row.team.player_2?.name ?? "?"}
                 {row.isTiedForLead && (
-                  <span className="ml-2 rounded bg-amber-100 px-1.5 py-0.5 text-xs font-normal text-amber-800">
+                  <span className="ml-2 rounded bg-amber-100 px-1.5 py-0.5 text-xs font-normal text-amber-800 dark:bg-amber-950 dark:text-amber-300">
                     tied
                   </span>
                 )}
@@ -83,7 +83,7 @@ export default function LeaderboardTable({
         </tbody>
       </table>
       {hasTie && (
-        <p className="mt-2 text-xs text-amber-700">
+        <p className="mt-2 text-xs text-amber-700 dark:text-amber-400">
           Tied for first after all 3 rounds — settle it with the 9-hole playoff.
         </p>
       )}

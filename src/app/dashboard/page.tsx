@@ -27,11 +27,11 @@ export default async function DashboardPage() {
     return (
       <div>
         <h1 className="mb-2 text-2xl font-bold">Welcome, {profile.name}</h1>
-        <p className="text-neutral-600">
+        <p className="text-neutral-600 dark:text-neutral-400">
           No season has been created yet.{" "}
           {profile.role === "admin" ? (
             <>
-              Head to the <Link href="/admin" className="text-green-700 underline">admin panel</Link> to start one.
+              Head to the <Link href="/admin" className="text-green-700 underline dark:text-green-400">admin panel</Link> to start one.
             </>
           ) : (
             "Ask your tournament organizer to start one."
@@ -68,40 +68,40 @@ export default async function DashboardPage() {
     <div className="flex flex-col gap-6">
       <div>
         <h1 className="mb-1 text-2xl font-bold">Welcome, {profile.name}</h1>
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
           {season.year} season — {STATUS_LABEL[season.status] ?? season.status}
         </p>
       </div>
 
-      <div className="rounded-lg border border-neutral-200 bg-white p-4">
+      <div className="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
         <h2 className="mb-2 font-semibold">Your handicap</h2>
         {handicap != null ? (
-          <p className="text-3xl font-bold text-green-800">{handicap.toFixed(1)}</p>
+          <p className="text-3xl font-bold text-green-800 dark:text-green-400">{handicap.toFixed(1)}</p>
         ) : (
-          <p className="text-neutral-600">
+          <p className="text-neutral-600 dark:text-neutral-400">
             Not yet qualified — log at least {MIN_QUALIFYING_ROUNDS} rounds ({rounds.length}/
             {MIN_QUALIFYING_ROUNDS} so far).
           </p>
         )}
-        <p className="mt-1 text-xs text-neutral-500">
+        <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
           {qualified ? "Based on your best 2 qualifying rounds." : "Average of your best 2 rounds once qualified."}
         </p>
-        <Link href="/rounds" className="mt-3 inline-block text-sm text-green-700 underline">
+        <Link href="/rounds" className="mt-3 inline-block text-sm text-green-700 underline dark:text-green-400">
           Log a round →
         </Link>
       </div>
 
-      <div className="rounded-lg border border-neutral-200 bg-white p-4">
+      <div className="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
         <h2 className="mb-2 font-semibold">Your team</h2>
         {myTeam ? (
           <p>
             You&apos;re paired with <span className="font-medium">{partnerName ?? "—"}</span>.
           </p>
         ) : (
-          <p className="text-neutral-600">Teams haven&apos;t been generated yet.</p>
+          <p className="text-neutral-600 dark:text-neutral-400">Teams haven&apos;t been generated yet.</p>
         )}
         {myTeam && (
-          <Link href="/leaderboard" className="mt-3 inline-block text-sm text-green-700 underline">
+          <Link href="/leaderboard" className="mt-3 inline-block text-sm text-green-700 underline dark:text-green-400">
             View leaderboard →
           </Link>
         )}

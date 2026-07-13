@@ -17,7 +17,7 @@ export default async function RoundsPage() {
     .maybeSingle();
 
   if (!season) {
-    return <p className="text-neutral-600">No season is active yet.</p>;
+    return <p className="text-neutral-600 dark:text-neutral-400">No season is active yet.</p>;
   }
 
   const locked = season.status !== "qualifying";
@@ -47,14 +47,14 @@ export default async function RoundsPage() {
     <div className="flex flex-col gap-6">
       <div>
         <h1 className="mb-1 text-2xl font-bold">Qualifying Rounds</h1>
-        <p className="text-sm text-neutral-500">
+        <p className="text-sm text-neutral-500 dark:text-neutral-400">
           White tees. Best {MIN_QUALIFYING_ROUNDS} of your rounds count toward your handicap.
           {locked && " Qualifying is currently locked."}
         </p>
       </div>
 
       {!locked && (
-        <div className="rounded-lg border border-neutral-200 bg-white p-4">
+        <div className="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
           <h2 className="mb-3 font-semibold">Log a round</h2>
           <form action={addRound} className="flex flex-wrap items-end gap-3">
             <input type="hidden" name="season_id" value={season.id} />
@@ -65,7 +65,7 @@ export default async function RoundsPage() {
                 type="date"
                 required
                 defaultValue={new Date().toISOString().slice(0, 10)}
-                className="rounded-md border border-neutral-300 px-2 py-1.5"
+                className="rounded-md border border-neutral-300 px-2 py-1.5 dark:border-neutral-700 dark:bg-neutral-900"
               />
             </label>
             <label className="flex flex-col text-sm">
@@ -77,7 +77,7 @@ export default async function RoundsPage() {
                 min={27}
                 max={90}
                 placeholder="72"
-                className="w-24 rounded-md border border-neutral-300 px-2 py-1.5"
+                className="w-24 rounded-md border border-neutral-300 px-2 py-1.5 dark:border-neutral-700 dark:bg-neutral-900"
               />
             </label>
             <label className="flex flex-col text-sm">
@@ -88,7 +88,7 @@ export default async function RoundsPage() {
                 required
                 min={1}
                 placeholder="88"
-                className="w-24 rounded-md border border-neutral-300 px-2 py-1.5"
+                className="w-24 rounded-md border border-neutral-300 px-2 py-1.5 dark:border-neutral-700 dark:bg-neutral-900"
               />
             </label>
             <button
@@ -101,14 +101,14 @@ export default async function RoundsPage() {
         </div>
       )}
 
-      <div className="rounded-lg border border-neutral-200 bg-white p-4">
+      <div className="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
         <h2 className="mb-3 font-semibold">Your rounds</h2>
         {myRounds.length === 0 ? (
-          <p className="text-neutral-600">No rounds logged yet.</p>
+          <p className="text-neutral-600 dark:text-neutral-400">No rounds logged yet.</p>
         ) : (
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-neutral-200 text-left text-neutral-500">
+              <tr className="border-b border-neutral-200 text-left text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
                 <th className="py-1.5 pr-2">Date</th>
                 <th className="py-1.5 pr-2">Par</th>
                 <th className="py-1.5 pr-2">Score</th>
@@ -118,7 +118,7 @@ export default async function RoundsPage() {
             </thead>
             <tbody>
               {myRounds.map((r) => (
-                <tr key={r.id} className="border-b border-neutral-100">
+                <tr key={r.id} className="border-b border-neutral-100 dark:border-neutral-800">
                   <td className="py-1.5 pr-2">{r.date}</td>
                   <td className="py-1.5 pr-2">{r.course_par}</td>
                   <td className="py-1.5 pr-2">{r.score}</td>
@@ -130,7 +130,7 @@ export default async function RoundsPage() {
                     <td className="py-1.5">
                       <form action={deleteRound}>
                         <input type="hidden" name="round_id" value={r.id} />
-                        <button type="submit" className="text-xs text-red-600 hover:underline">
+                        <button type="submit" className="text-xs text-red-600 hover:underline dark:text-red-400">
                           Remove
                         </button>
                       </form>
@@ -143,11 +143,11 @@ export default async function RoundsPage() {
         )}
       </div>
 
-      <div className="rounded-lg border border-neutral-200 bg-white p-4">
+      <div className="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
         <h2 className="mb-3 font-semibold">Everyone&apos;s handicap (read-only)</h2>
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-neutral-200 text-left text-neutral-500">
+            <tr className="border-b border-neutral-200 text-left text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
               <th className="py-1.5 pr-2">Player</th>
               <th className="py-1.5 pr-2">Rounds</th>
               <th className="py-1.5 pr-2">Handicap</th>
@@ -155,7 +155,7 @@ export default async function RoundsPage() {
           </thead>
           <tbody>
             {roster.map((r) => (
-              <tr key={r.profile.id} className="border-b border-neutral-100">
+              <tr key={r.profile.id} className="border-b border-neutral-100 dark:border-neutral-800">
                 <td className="py-1.5 pr-2">{r.profile.name}</td>
                 <td className="py-1.5 pr-2">{r.roundCount}</td>
                 <td className="py-1.5 pr-2">{r.handicap != null ? r.handicap.toFixed(1) : "—"}</td>

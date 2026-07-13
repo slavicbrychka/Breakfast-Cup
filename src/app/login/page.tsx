@@ -11,13 +11,17 @@ export default async function LoginPage({
   return (
     <div className="mx-auto flex min-h-[80vh] max-w-sm flex-col justify-center px-4">
       <h1 className="mb-1 text-2xl font-bold">Buddy Cup</h1>
-      <p className="mb-6 text-sm text-neutral-500">Log in to your account</p>
+      <p className="mb-6 text-sm text-neutral-500 dark:text-neutral-400">Log in to your account</p>
 
       {error && (
-        <p className="mb-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>
+        <p className="mb-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">
+          {error}
+        </p>
       )}
       {message && !error && (
-        <p className="mb-4 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700">{message}</p>
+        <p className="mb-4 rounded-md bg-green-50 px-3 py-2 text-sm text-green-700 dark:bg-green-950 dark:text-green-300">
+          {message}
+        </p>
       )}
 
       <form action={signIn} className="flex flex-col gap-3">
@@ -26,14 +30,14 @@ export default async function LoginPage({
           type="email"
           required
           placeholder="Email"
-          className="rounded-md border border-neutral-300 px-3 py-2"
+          className="rounded-md border border-neutral-300 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-900"
         />
         <input
           name="password"
           type="password"
           required
           placeholder="Password"
-          className="rounded-md border border-neutral-300 px-3 py-2"
+          className="rounded-md border border-neutral-300 px-3 py-2 dark:border-neutral-700 dark:bg-neutral-900"
         />
         <button
           type="submit"
@@ -43,9 +47,9 @@ export default async function LoginPage({
         </button>
       </form>
 
-      <p className="mt-4 text-sm text-neutral-500">
+      <p className="mt-4 text-sm text-neutral-500 dark:text-neutral-400">
         No account yet?{" "}
-        <Link href="/signup" className="text-green-700 underline">
+        <Link href="/signup" className="text-green-700 underline dark:text-green-400">
           Sign up
         </Link>
       </p>

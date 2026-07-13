@@ -23,11 +23,16 @@ export default async function TrophyCasePage() {
       <h1 className="text-2xl font-bold">Trophy Case</h1>
 
       {entries.length === 0 ? (
-        <p className="text-neutral-600">No seasons have been completed yet — the trophy is still up for grabs.</p>
+        <p className="text-neutral-600 dark:text-neutral-400">
+          No seasons have been completed yet — the trophy is still up for grabs.
+        </p>
       ) : (
         <div className="flex flex-col gap-4">
           {entries.map((entry) => (
-            <div key={entry.season_id} className="flex items-center gap-4 rounded-lg border border-neutral-200 bg-white p-4">
+            <div
+              key={entry.season_id}
+              className="flex items-center gap-4 rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900"
+            >
               {entry.photo_url && (
                 <Image
                   src={entry.photo_url}
@@ -39,7 +44,7 @@ export default async function TrophyCasePage() {
                 />
               )}
               <div>
-                <p className="text-sm text-neutral-500">{entry.season?.year ?? "—"}</p>
+                <p className="text-sm text-neutral-500 dark:text-neutral-400">{entry.season?.year ?? "—"}</p>
                 <p className="text-lg font-semibold">{entry.winning_team_names}</p>
               </div>
             </div>
