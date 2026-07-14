@@ -1,4 +1,4 @@
--- Buddy Cup Tournament Tracker — initial schema
+-- The Breakfast Cup — initial schema
 -- Run this in the Supabase SQL editor (or via `supabase db push`) on a fresh project.
 
 -- =========================================================================

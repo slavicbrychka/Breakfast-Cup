@@ -10,7 +10,7 @@ export default async function SignupPage({
 
   return (
     <div className="mx-auto flex min-h-[80vh] max-w-sm flex-col justify-center px-4">
-      <h1 className="mb-1 text-2xl font-bold">Buddy Cup</h1>
+      <h1 className="mb-1 text-2xl font-bold">The Breakfast Cup</h1>
       <p className="mb-6 text-sm text-neutral-500 dark:text-neutral-400">Create your account</p>
 
       {error && (

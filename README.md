@@ -1,7 +1,7 @@
-# Buddy Cup Tournament Tracker
+# The Breakfast Cup
 
 Web app for tracking handicap-qualification rounds, generating scramble teams,
-and running the 54-hole Buddy Cup leaderboard — with real accounts and per-role
+and running the 54-hole Breakfast Cup leaderboard — with real accounts and per-role
 permissions (admin vs. player) via Supabase auth + row-level security.
 
 ## Stack

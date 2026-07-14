@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Buddy Cup Tournament Tracker",
-  description: "Qualifying rounds, teams, and the 54-hole Buddy Cup leaderboard.",
+  title: "The Breakfast Cup",
+  description: "Qualifying rounds, teams, and the 54-hole Breakfast Cup leaderboard.",
 };
 
 export default function RootLayout({
