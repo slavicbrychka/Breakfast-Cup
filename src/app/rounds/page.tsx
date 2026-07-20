@@ -21,6 +21,7 @@ export default async function RoundsPage() {
   }
 
   const locked = season.status !== "qualifying";
+  const canSeeRoster = profile.role === "admin" || locked;
 
   const [{ data: allProfiles }, { data: allRounds }] = await Promise.all([
     supabase.from("profiles").select("*").order("name"),
@@ -144,25 +145,32 @@ export default async function RoundsPage() {
       </div>
 
       <div className="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
-        <h2 className="mb-3 font-semibold">Everyone&apos;s handicap (read-only)</h2>
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-neutral-200 text-left text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
-              <th className="py-1.5 pr-2">Player</th>
-              <th className="py-1.5 pr-2">Rounds</th>
-              <th className="py-1.5 pr-2">Handicap</th>
-            </tr>
-          </thead>
-          <tbody>
-            {roster.map((r) => (
-              <tr key={r.profile.id} className="border-b border-neutral-100 dark:border-neutral-800">
-                <td className="py-1.5 pr-2">{r.profile.name}</td>
-                <td className="py-1.5 pr-2">{r.roundCount}</td>
-                <td className="py-1.5 pr-2">{r.handicap != null ? r.handicap.toFixed(1) : "—"}</td>
+        <h2 className="mb-3 font-semibold">Everyone&apos;s handicap</h2>
+        {canSeeRoster ? (
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-neutral-200 text-left text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
+                <th className="py-1.5 pr-2">Player</th>
+                <th className="py-1.5 pr-2">Rounds</th>
+                <th className="py-1.5 pr-2">Handicap</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {roster.map((r) => (
+                <tr key={r.profile.id} className="border-b border-neutral-100 dark:border-neutral-800">
+                  <td className="py-1.5 pr-2">{r.profile.name}</td>
+                  <td className="py-1.5 pr-2">{r.roundCount}</td>
+                  <td className="py-1.5 pr-2">{r.handicap != null ? r.handicap.toFixed(1) : "—"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p className="text-neutral-600 dark:text-neutral-400">
+            Hidden until qualifying closes, so nobody can sandbag a round to influence pairings. Your own rounds
+            above are always visible to you.
+          </p>
+        )}
       </div>
     </div>
   );
