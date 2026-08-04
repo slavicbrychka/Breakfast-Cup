@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/get-profile";
 import { calcHandicap, roundDifferential, MIN_QUALIFYING_ROUNDS } from "@/lib/golf";
-import { addRound, deleteRound } from "./actions";
+import { addRound, updateRound, deleteRound } from "./actions";
 
 export default async function RoundsPage() {
   const profile = await getCurrentProfile();
@@ -31,6 +31,7 @@ export default async function RoundsPage() {
   const profiles = allProfiles ?? [];
   const rounds = allRounds ?? [];
   const myRounds = rounds.filter((r) => r.user_id === profile.id);
+  const nameById = new Map(profiles.map((p) => [p.id, p.name]));
 
   const roster = profiles
     .map((p) => {
@@ -172,6 +173,65 @@ export default async function RoundsPage() {
           </p>
         )}
       </div>
+
+      {profile.role === "admin" && (
+        <div className="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
+          <h2 className="mb-3 font-semibold">Edit any round (admin)</h2>
+          {rounds.length === 0 ? (
+            <p className="text-neutral-600 dark:text-neutral-400">No rounds logged yet.</p>
+          ) : (
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-neutral-200 text-left text-neutral-500 dark:border-neutral-800 dark:text-neutral-400">
+                  <th className="py-1.5 pr-2">Player</th>
+                  <th className="py-1.5 pr-2">Date</th>
+                  <th className="py-1.5 pr-2">Par / Score</th>
+                  <th className="py-1.5"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {rounds.map((r) => (
+                  <tr key={r.id} className="border-b border-neutral-100 dark:border-neutral-800">
+                    <td className="py-1.5 pr-2">{nameById.get(r.user_id) ?? "—"}</td>
+                    <td className="py-1.5 pr-2">{r.date}</td>
+                    <td className="py-1.5 pr-2">
+                      <form action={updateRound} className="flex items-center gap-1">
+                        <input type="hidden" name="round_id" value={r.id} />
+                        <input
+                          name="course_par"
+                          type="number"
+                          min={27}
+                          max={90}
+                          defaultValue={r.course_par}
+                          className="w-16 rounded border border-neutral-300 px-1 py-0.5 dark:border-neutral-700 dark:bg-neutral-900"
+                        />
+                        <input
+                          name="score"
+                          type="number"
+                          min={1}
+                          defaultValue={r.score}
+                          className="w-16 rounded border border-neutral-300 px-1 py-0.5 dark:border-neutral-700 dark:bg-neutral-900"
+                        />
+                        <button type="submit" className="text-xs text-green-700 underline dark:text-green-400">
+                          save
+                        </button>
+                      </form>
+                    </td>
+                    <td className="py-1.5">
+                      <form action={deleteRound}>
+                        <input type="hidden" name="round_id" value={r.id} />
+                        <button type="submit" className="text-xs text-red-600 hover:underline dark:text-red-400">
+                          remove
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      )}
     </div>
   );
 }

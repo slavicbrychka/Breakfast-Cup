@@ -83,6 +83,53 @@ export default async function LeaderboardPage() {
           </div>
         </div>
       )}
+
+      {profile.role === "admin" && teams && teams.length > 0 && (
+        <div className="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
+          <h2 className="mb-3 font-semibold">Edit any team&apos;s scores (admin)</h2>
+          <div className="flex flex-col gap-4">
+            {teams.map((team) => {
+              const teamScores = (scores ?? []).filter((s) => s.team_id === team.id);
+              return (
+                <div key={team.id}>
+                  <p className="mb-1 text-sm font-medium">
+                    {team.player_1?.name ?? "?"} &amp; {team.player_2?.name ?? "?"}
+                  </p>
+                  <div className="flex flex-wrap gap-4">
+                    {Array.from({ length: TOURNAMENT_ROUNDS }, (_, i) => i + 1).map((roundNumber) => {
+                      const existing = teamScores.find((s) => s.round_number === roundNumber);
+                      return (
+                        <form key={roundNumber} action={submitScore} className="flex flex-col text-sm">
+                          <input type="hidden" name="team_id" value={team.id} />
+                          <input type="hidden" name="season_id" value={season.id} />
+                          <input type="hidden" name="round_number" value={roundNumber} />
+                          Round {roundNumber}
+                          <div className="mt-1 flex gap-1">
+                            <input
+                              name="strokes"
+                              type="number"
+                              min={1}
+                              defaultValue={existing?.strokes ?? ""}
+                              placeholder="strokes"
+                              className="w-24 rounded-md border border-neutral-300 px-2 py-1.5 dark:border-neutral-700 dark:bg-neutral-900"
+                            />
+                            <button
+                              type="submit"
+                              className="rounded-md bg-green-700 px-3 py-1.5 text-white hover:bg-green-800"
+                            >
+                              Save
+                            </button>
+                          </div>
+                        </form>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -32,6 +32,27 @@ export async function addRound(formData: FormData) {
   revalidatePath("/dashboard");
 }
 
+export async function updateRound(formData: FormData) {
+  const roundId = String(formData.get("round_id") ?? "");
+  const coursePar = Number(formData.get("course_par"));
+  const score = Number(formData.get("score"));
+
+  if (!roundId || !coursePar || !score) {
+    throw new Error("Missing required fields");
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("rounds")
+    .update({ course_par: coursePar, score })
+    .eq("id", roundId);
+
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/rounds");
+  revalidatePath("/dashboard");
+}
+
 export async function deleteRound(formData: FormData) {
   const roundId = String(formData.get("round_id") ?? "");
   if (!roundId) return;
