@@ -85,6 +85,67 @@ export function generateTeamPairings(
   return pairs;
 }
 
+/**
+ * Rough 2-player scramble reduction applied to a team's combined handicap
+ * to estimate their strokes-over-par pace. Common club-scramble rule of
+ * thumb, not a rigorous statistical model — this whole prediction feature
+ * is a for-fun admin tool, not a real forecast.
+ */
+export const SCRAMBLE_FACTOR = 0.25;
+
+/** Stroke-gap constant controlling how quickly win odds fall off between teams. */
+export const ODDS_SPREAD = 5;
+
+export interface SimulatedTeam {
+  players: [PlayerWithHandicap, PlayerWithHandicap];
+  combinedHandicap: number;
+  /** Predicted total strokes vs. par across TOURNAMENT_ROUNDS rounds (54 holes). */
+  predictedDifferential: number;
+}
+
+/**
+ * Pairs players the same way real team generation does (lowest handicap
+ * with highest) and estimates each resulting team's scramble pace. Used
+ * for the admin "what-if" simulator — doesn't touch the real teams table.
+ */
+export function simulateTeams(players: PlayerWithHandicap[]): SimulatedTeam[] {
+  return generateTeamPairings(players).map(([a, b]) => {
+    const combinedHandicap = a.handicap + b.handicap;
+    return {
+      players: [a, b],
+      combinedHandicap,
+      predictedDifferential: combinedHandicap * SCRAMBLE_FACTOR * TOURNAMENT_ROUNDS,
+    };
+  });
+}
+
+export interface TeamOdds {
+  winProbability: number;
+  /** American odds format, e.g. "-150" (favorite) or "+220" (underdog). */
+  americanOdds: string;
+}
+
+/**
+ * Converts predicted scores into illustrative win odds: the team predicted
+ * to shoot the lowest score is the favorite, with likelihood falling off
+ * as the stroke gap to the leader grows. A rough-and-ready heuristic for
+ * admin fun, not a calibrated betting line.
+ */
+export function calcWinOdds(teams: SimulatedTeam[]): TeamOdds[] {
+  if (teams.length === 0) return [];
+
+  const best = Math.min(...teams.map((t) => t.predictedDifferential));
+  const weights = teams.map((t) => Math.exp(-(t.predictedDifferential - best) / ODDS_SPREAD));
+  const total = weights.reduce((sum, w) => sum + w, 0);
+
+  return weights.map((w) => {
+    const p = Math.min(0.99, Math.max(0.01, w / total));
+    const americanOdds =
+      p >= 0.5 ? `-${Math.round((p / (1 - p)) * 100)}` : `+${Math.round(((1 - p) / p) * 100)}`;
+    return { winProbability: p, americanOdds };
+  });
+}
+
 export interface LeaderboardRow<T extends Team = Team> {
   team: T;
   totalStrokes: number;

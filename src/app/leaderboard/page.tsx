@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/get-profile";
 import { TOURNAMENT_ROUNDS } from "@/lib/golf";
 import LeaderboardTable from "@/components/LeaderboardTable";
+import TeamSimulator from "@/components/TeamSimulator";
 import { submitScore } from "./actions";
 
 export default async function LeaderboardPage() {
@@ -28,6 +29,14 @@ export default async function LeaderboardPage() {
       .eq("season_id", season.id),
     supabase.from("tournament_scores").select("*").eq("season_id", season.id),
   ]);
+
+  const isAdmin = profile.role === "admin";
+  const [{ data: allProfiles }, { data: allRounds }] = isAdmin
+    ? await Promise.all([
+        supabase.from("profiles").select("*").order("name"),
+        supabase.from("rounds").select("*").eq("season_id", season.id),
+      ])
+    : [{ data: null }, { data: null }];
 
   const myTeam = (teams ?? []).find(
     (t) => t.player_1_id === profile.id || t.player_2_id === profile.id
@@ -81,6 +90,16 @@ export default async function LeaderboardPage() {
               );
             })}
           </div>
+        </div>
+      )}
+
+      {isAdmin && (
+        <div className="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
+          <h2 className="mb-1 font-semibold">Team Simulator (admin only)</h2>
+          <p className="mb-3 text-xs text-neutral-500 dark:text-neutral-400">
+            What-if pairings based on current handicaps — doesn&apos;t touch the real teams. Only visible to you.
+          </p>
+          <TeamSimulator seasonId={season.id} profiles={allProfiles ?? []} initialRounds={allRounds ?? []} />
         </div>
       )}
 
