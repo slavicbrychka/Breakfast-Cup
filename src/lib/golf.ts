@@ -32,6 +32,31 @@ export function isQualified(rounds: unknown[]): boolean {
   return rounds.length >= MIN_QUALIFYING_ROUNDS;
 }
 
+export interface HandicapDisplay {
+  value: number;
+  /** True when based on fewer than MIN_QUALIFYING_ROUNDS rounds — not yet official. */
+  provisional: boolean;
+}
+
+/**
+ * Handicap for display purposes: shows a provisional value from a single
+ * round (rather than nothing) so standings are readable before a player
+ * has qualified. Team pairing must still use calcHandicap, which requires
+ * the full minimum round count.
+ */
+export function calcDisplayHandicap(
+  rounds: Pick<Round, "score" | "course_par">[]
+): HandicapDisplay | null {
+  if (rounds.length === 0) return null;
+
+  const official = calcHandicap(rounds);
+  if (official != null) return { value: official, provisional: false };
+
+  const differentials = rounds.map(roundDifferential);
+  const avg = differentials.reduce((total, d) => total + d, 0) / differentials.length;
+  return { value: avg, provisional: true };
+}
+
 export interface PlayerWithHandicap {
   profile: Profile;
   handicap: number;

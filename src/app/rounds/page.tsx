@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/get-profile";
-import { calcHandicap, roundDifferential, MIN_QUALIFYING_ROUNDS } from "@/lib/golf";
+import { calcDisplayHandicap, roundDifferential, MIN_QUALIFYING_ROUNDS } from "@/lib/golf";
 import { addRound, updateRound, deleteRound } from "./actions";
 
 export default async function RoundsPage() {
@@ -36,14 +36,16 @@ export default async function RoundsPage() {
   const roster = profiles
     .map((p) => {
       const playerRounds = rounds.filter((r) => r.user_id === p.id);
-      return { profile: p, handicap: calcHandicap(playerRounds), roundCount: playerRounds.length };
+      return { profile: p, handicap: calcDisplayHandicap(playerRounds), roundCount: playerRounds.length };
     })
     .sort((a, b) => {
       if (a.handicap == null && b.handicap == null) return a.profile.name.localeCompare(b.profile.name);
       if (a.handicap == null) return 1;
       if (b.handicap == null) return -1;
-      return a.handicap - b.handicap;
+      return a.handicap.value - b.handicap.value;
     });
+
+  const hasProvisional = roster.some((r) => r.handicap?.provisional);
 
   return (
     <div className="flex flex-col gap-6">
@@ -161,7 +163,16 @@ export default async function RoundsPage() {
                 <tr key={r.profile.id} className="border-b border-neutral-100 dark:border-neutral-800">
                   <td className="py-1.5 pr-2">{r.profile.name}</td>
                   <td className="py-1.5 pr-2">{r.roundCount}</td>
-                  <td className="py-1.5 pr-2">{r.handicap != null ? r.handicap.toFixed(1) : "—"}</td>
+                  <td className="py-1.5 pr-2">
+                    {r.handicap != null ? (
+                      <span className={r.handicap.provisional ? "font-medium text-amber-600 dark:text-amber-400" : ""}>
+                        {r.handicap.value.toFixed(1)}
+                        {r.handicap.provisional && "*"}
+                      </span>
+                    ) : (
+                      "—"
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -170,6 +181,11 @@ export default async function RoundsPage() {
           <p className="text-neutral-600 dark:text-neutral-400">
             Hidden until qualifying closes, so nobody can sandbag a round to influence pairings. Your own rounds
             above are always visible to you.
+          </p>
+        )}
+        {canSeeRoster && hasProvisional && (
+          <p className="mt-2 text-xs text-amber-700 dark:text-amber-400">
+            * Provisional — based on only 1 round, not yet the official best-2-round average.
           </p>
         )}
       </div>

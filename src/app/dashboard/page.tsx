@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/get-profile";
-import { calcHandicap, isQualified, MIN_QUALIFYING_ROUNDS } from "@/lib/golf";
+import { calcDisplayHandicap, MIN_QUALIFYING_ROUNDS } from "@/lib/golf";
 
 const STATUS_LABEL: Record<string, string> = {
   qualifying: "Qualifying period open",
@@ -48,8 +48,7 @@ export default async function DashboardPage() {
     .eq("user_id", profile.id);
 
   const rounds = myRounds ?? [];
-  const handicap = calcHandicap(rounds);
-  const qualified = isQualified(rounds);
+  const handicap = calcDisplayHandicap(rounds);
 
   const { data: myTeam } = await supabase
     .from("teams")
@@ -76,7 +75,12 @@ export default async function DashboardPage() {
       <div className="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
         <h2 className="mb-2 font-semibold">Your handicap</h2>
         {handicap != null ? (
-          <p className="text-3xl font-bold text-green-800 dark:text-green-400">{handicap.toFixed(1)}</p>
+          <p className="text-3xl font-bold text-green-800 dark:text-green-400">
+            {handicap.value.toFixed(1)}
+            {handicap.provisional && (
+              <span className="ml-1 align-top text-lg text-amber-600 dark:text-amber-400">*</span>
+            )}
+          </p>
         ) : (
           <p className="text-neutral-600 dark:text-neutral-400">
             Not yet qualified — log at least {MIN_QUALIFYING_ROUNDS} rounds ({rounds.length}/
@@ -84,9 +88,16 @@ export default async function DashboardPage() {
           </p>
         )}
         <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">
-          {qualified ? "Based on your best 2 qualifying rounds." : "Average of your best 2 rounds once qualified."}
+          {handicap == null
+            ? "Average of your best 2 rounds once qualified."
+            : handicap.provisional
+              ? `* Provisional — based on 1 round. Log ${MIN_QUALIFYING_ROUNDS - rounds.length} more to qualify.`
+              : "Based on your best 2 qualifying rounds."}
         </p>
-        <Link href="/rounds" className="mt-3 inline-block text-sm text-green-700 underline dark:text-green-400">
+        <Link
+          href="/rounds"
+          className="mt-3 inline-block rounded-md bg-green-700 px-4 py-1.5 text-sm font-medium text-white hover:bg-green-800"
+        >
           Log a round →
         </Link>
       </div>

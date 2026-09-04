@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getCurrentProfile } from "@/lib/get-profile";
 import { signOut } from "@/lib/auth-actions";
+import NavLinks from "./NavLinks";
 
 const PLAYER_LINKS = [
   { href: "/dashboard", label: "Dashboard" },
@@ -22,20 +23,12 @@ export default async function Nav() {
         <Link href="/dashboard" className="font-bold text-green-800 dark:text-green-400">
           The Breakfast Cup
         </Link>
-        <nav className="flex items-center gap-4 overflow-x-auto text-sm">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="whitespace-nowrap text-neutral-700 hover:text-green-800 dark:text-neutral-300 dark:hover:text-green-400"
-            >
-              {link.label}
-            </Link>
-          ))}
-          <form action={signOut}>
+        <nav className="flex items-center gap-2 overflow-x-auto text-sm">
+          <NavLinks links={links} />
+          <form action={signOut} className="ml-1">
             <button
               type="submit"
-              className="whitespace-nowrap text-neutral-500 hover:text-red-700 dark:text-neutral-400 dark:hover:text-red-400"
+              className="whitespace-nowrap px-2 py-1 text-neutral-500 hover:text-red-700 dark:text-neutral-400 dark:hover:text-red-400"
             >
               Log out
             </button>

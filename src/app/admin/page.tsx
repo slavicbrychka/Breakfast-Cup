@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/get-profile";
-import { calcHandicap } from "@/lib/golf";
+import { calcDisplayHandicap } from "@/lib/golf";
 import {
   createSeason,
   setSeasonStatus,
@@ -38,8 +38,9 @@ export default async function AdminPage() {
 
   const rosterWithHandicap = (profiles ?? []).map((p) => ({
     profile: p,
-    handicap: calcHandicap((rounds ?? []).filter((r) => r.user_id === p.id)),
+    handicap: calcDisplayHandicap((rounds ?? []).filter((r) => r.user_id === p.id)),
   }));
+  const hasProvisionalHandicap = rosterWithHandicap.some((r) => r.handicap?.provisional);
 
   return (
     <div className="flex flex-col gap-6">
@@ -205,7 +206,16 @@ export default async function AdminPage() {
               <tr key={p.id} className="border-b border-neutral-100 dark:border-neutral-800">
                 <td className="py-1.5 pr-2">{p.name}</td>
                 <td className="py-1.5 pr-2 text-neutral-500 dark:text-neutral-400">{p.email}</td>
-                <td className="py-1.5 pr-2">{handicap != null ? handicap.toFixed(1) : "—"}</td>
+                <td className="py-1.5 pr-2">
+                  {handicap != null ? (
+                    <span className={handicap.provisional ? "font-medium text-amber-600 dark:text-amber-400" : ""}>
+                      {handicap.value.toFixed(1)}
+                      {handicap.provisional && "*"}
+                    </span>
+                  ) : (
+                    "—"
+                  )}
+                </td>
                 <td className="py-1.5 pr-2">
                   <form action={updatePlayerRole} className="flex items-center gap-1">
                     <input type="hidden" name="user_id" value={p.id} />
@@ -222,6 +232,11 @@ export default async function AdminPage() {
             ))}
           </tbody>
         </table>
+        {hasProvisionalHandicap && (
+          <p className="mt-2 text-xs text-amber-700 dark:text-amber-400">
+            * Provisional — based on only 1 round, not yet the official best-2-round average.
+          </p>
+        )}
       </section>
     </div>
   );
