@@ -135,7 +135,7 @@ export default async function AdminPage() {
                               </option>
                             ))}
                           </select>
-                          <button type="submit" className="text-xs text-green-700 underline dark:text-green-400">
+                          <button type="submit" className="rounded bg-green-700 px-2 py-1 text-xs font-medium text-white hover:bg-green-800">
                             save
                           </button>
                         </form>
@@ -151,7 +151,7 @@ export default async function AdminPage() {
                               </option>
                             ))}
                           </select>
-                          <button type="submit" className="text-xs text-green-700 underline dark:text-green-400">
+                          <button type="submit" className="rounded bg-green-700 px-2 py-1 text-xs font-medium text-white hover:bg-green-800">
                             save
                           </button>
                         </form>
@@ -223,7 +223,7 @@ export default async function AdminPage() {
                       <option value="player">player</option>
                       <option value="admin">admin</option>
                     </select>
-                    <button type="submit" className="text-xs text-green-700 underline dark:text-green-400">
+                    <button type="submit" className="rounded bg-green-700 px-2 py-1 text-xs font-medium text-white hover:bg-green-800">
                       save
                     </button>
                   </form>

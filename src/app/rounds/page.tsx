@@ -134,7 +134,7 @@ export default async function RoundsPage() {
                     <td className="py-1.5">
                       <form action={deleteRound}>
                         <input type="hidden" name="round_id" value={r.id} />
-                        <button type="submit" className="text-xs text-red-600 hover:underline dark:text-red-400">
+                        <button type="submit" className="rounded bg-red-600 px-2 py-1 text-xs font-medium text-white hover:bg-red-700">
                           Remove
                         </button>
                       </form>
@@ -228,7 +228,7 @@ export default async function RoundsPage() {
                           defaultValue={r.score}
                           className="w-16 rounded border border-neutral-300 px-1 py-0.5 dark:border-neutral-700 dark:bg-neutral-900"
                         />
-                        <button type="submit" className="text-xs text-green-700 underline dark:text-green-400">
+                        <button type="submit" className="rounded bg-green-700 px-2 py-1 text-xs font-medium text-white hover:bg-green-800">
                           save
                         </button>
                       </form>
@@ -236,7 +236,7 @@ export default async function RoundsPage() {
                     <td className="py-1.5">
                       <form action={deleteRound}>
                         <input type="hidden" name="round_id" value={r.id} />
-                        <button type="submit" className="text-xs text-red-600 hover:underline dark:text-red-400">
+                        <button type="submit" className="rounded bg-red-600 px-2 py-1 text-xs font-medium text-white hover:bg-red-700">
                           remove
                         </button>
                       </form>
