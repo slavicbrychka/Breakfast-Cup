@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/get-profile";
 import { calcDisplayHandicap, roundDifferential, MIN_QUALIFYING_ROUNDS } from "@/lib/golf";
-import { addRound, updateRound, deleteRound } from "./actions";
+import { addRound, addRoundForPlayer, updateRound, deleteRound } from "./actions";
 
 export default async function RoundsPage() {
   const profile = await getCurrentProfile();
@@ -189,6 +189,71 @@ export default async function RoundsPage() {
           </p>
         )}
       </div>
+
+      {profile.role === "admin" && (
+        <div className="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
+          <h2 className="mb-3 font-semibold">Log a round for a player (admin)</h2>
+          <p className="mb-3 text-xs text-neutral-500 dark:text-neutral-400">
+            For guys who don&apos;t log their own rounds. Works even while qualifying is locked.
+          </p>
+          <form action={addRoundForPlayer} className="flex flex-wrap items-end gap-3">
+            <input type="hidden" name="season_id" value={season.id} />
+            <label className="flex flex-col text-sm">
+              Player
+              <select
+                name="user_id"
+                required
+                className="rounded-md border border-neutral-300 px-2 py-1.5 dark:border-neutral-700 dark:bg-neutral-900"
+              >
+                {profiles.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="flex flex-col text-sm">
+              Date
+              <input
+                name="date"
+                type="date"
+                required
+                defaultValue={new Date().toISOString().slice(0, 10)}
+                className="rounded-md border border-neutral-300 px-2 py-1.5 dark:border-neutral-700 dark:bg-neutral-900"
+              />
+            </label>
+            <label className="flex flex-col text-sm">
+              Course par
+              <input
+                name="course_par"
+                type="number"
+                required
+                min={27}
+                max={90}
+                placeholder="72"
+                className="w-24 rounded-md border border-neutral-300 px-2 py-1.5 dark:border-neutral-700 dark:bg-neutral-900"
+              />
+            </label>
+            <label className="flex flex-col text-sm">
+              Score
+              <input
+                name="score"
+                type="number"
+                required
+                min={1}
+                placeholder="88"
+                className="w-24 rounded-md border border-neutral-300 px-2 py-1.5 dark:border-neutral-700 dark:bg-neutral-900"
+              />
+            </label>
+            <button
+              type="submit"
+              className="rounded-md bg-green-700 px-4 py-1.5 font-medium text-white hover:bg-green-800"
+            >
+              Add round
+            </button>
+          </form>
+        </div>
+      )}
 
       {profile.role === "admin" && (
         <div className="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">

@@ -32,6 +32,35 @@ export async function addRound(formData: FormData) {
   revalidatePath("/dashboard");
 }
 
+export async function addRoundForPlayer(formData: FormData) {
+  const profile = await getCurrentProfile();
+  if (!profile || profile.role !== "admin") throw new Error("Admin only");
+
+  const userId = String(formData.get("user_id") ?? "");
+  const seasonId = String(formData.get("season_id") ?? "");
+  const coursePar = Number(formData.get("course_par"));
+  const score = Number(formData.get("score"));
+  const date = String(formData.get("date") ?? "");
+
+  if (!userId || !seasonId || !coursePar || !score || !date) {
+    throw new Error("Missing required fields");
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.from("rounds").insert({
+    user_id: userId,
+    season_id: seasonId,
+    course_par: coursePar,
+    score,
+    date,
+  });
+
+  if (error) throw new Error(error.message);
+
+  revalidatePath("/rounds");
+  revalidatePath("/dashboard");
+}
+
 export async function updateRound(formData: FormData) {
   const roundId = String(formData.get("round_id") ?? "");
   const coursePar = Number(formData.get("course_par"));
